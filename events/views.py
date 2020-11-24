@@ -1,9 +1,7 @@
 import calendar
 from datetime import date
 
-from django.http import HttpResponse
 from django.shortcuts import render
-from calendar import HTMLCalendar
 
 # Create your views here.
 from events.models import Event

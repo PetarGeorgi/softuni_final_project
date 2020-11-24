@@ -14,10 +14,10 @@
         {{ form.as_table }}
         <tr>
             <td>&nbsp;</td>
-            <td>input type='submit' value='Submit'</td>
+            <td><input type='submit' value='Submit'></td>
         </tr>
     </table>
-    {% csrf_token% }
+    {% csrf_token %}
     </form>
 {% endif %}
 {% endblock content %}
