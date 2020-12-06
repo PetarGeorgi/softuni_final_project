@@ -15,10 +15,35 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.auth import views as auth_views
+from django.views.generic.base import RedirectView
+from events.views import Event_view
+
+from events.admin import admin_site
 from . import contact
+
+admin.site.site_header = 'MyClub Administration'
+admin.site.site_title = 'MyClub Site Admin'
+admin.site.index_title = 'MyClub Site Admin Home'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('admin/password_reset',
+         auth_views.PasswordResetView.as_view(),
+         name='admin_password_reset',),
+    path('admin/password_reset/done/',
+         auth_views.PasswordResetDoneView.as_view(template_name='registration/password_reset_done.html'),
+         name='password_reset_down',),
+    path('reset/<uidb64>/<token>/',
+         auth_views.PasswordResetConfirmView.as_view(),
+         name='password_reset_confirm',
+         ),
+    path('reset/done',
+         auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'),
+         name='password_reset_complete'),
+    path('eventsadmin/', admin_site.urls),
     path('contact/', contact.contact, name='contact'),
     path("", include('events.urls')),
+    path('home', RedirectView.as_view(url ='/', permanent=True)),
+    path('events_view/', Event_view.as_view())
     ]

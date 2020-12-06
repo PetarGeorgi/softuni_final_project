@@ -1,0 +1,18 @@
+{% extend base.html %}
+
+{% block title %} MyClub Detail Events List {% endblock title %}
+
+{% block content %}
+    <h1>Event: {{ event.name }}</h1>
+    <table>
+        <tr>
+            <td><strong>Event date:</strong><strong>{{ event.event_date }}</strong></td>
+        </tr>
+        <tr><td><strong>Venue:</strong><strong>{{ Event.venue }}</strong></td></tr>
+        <tr><td><strong>Description:</strong><strong>{{ Event.description }}</strong></td></tr>
+        <tr>
+            <td><a href="/event/update/{{ event.id }}">Update</a></td>
+            <td><a href="/event/delete/{{ event.id }}">Delete Event</a></td>
+        </tr>
+    </table>
+{% endblock content %}
