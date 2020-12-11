@@ -1,7 +1,11 @@
 import calendar
 from datetime import date
 
-from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.checks import messages
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.forms import modelformset_factory
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
@@ -10,10 +14,11 @@ from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from  django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 
 
-from events.forms import VenueForm
+from events.forms import VenueForm, EventForm
 from events.models import Event, MyClubUser, Venue
 
 
@@ -38,6 +43,7 @@ def all_events(request):
     return render(request, 'events/event_list.html', {'event_list': event_list})
 
 
+@login_required(login_url=reverse_lazy('login'))
 def add_venue(request):
     submitted = False
     if request.method == 'POST':
@@ -52,6 +58,36 @@ def add_venue(request):
     return render(request, 'events/add_venue.html',
                   {'form': form, 'submitted': submitted}
                   )
+def all_events(request):
+    EventsFormSet = modelformset_factory(
+        Event,
+        fields=('name', 'event_date'),
+        extra=0
+    )
+    qry = Event.events.all().order_by('event_date')
+    pg = Paginator(qry, 4)
+    page = request.GET.get('page')
+    try:
+        event_records = pg.page(page)
+    except PageNotAnInteger:
+        event_records = pg.page(1)
+    except EmptyPage:
+        event_records = pg.page(pg.num_pages)
+    if request.method == 'POST':
+        formset = EventsFormSet(request.POST)
+        if formset.is_valid():
+            formset.save()
+            return_url = '/allevents/'
+            if 'page' in request.GET:
+                return_url += '?page=' + request.GET['page']
+            return HttpResponseRedirect(return_url)
+    else:
+        page_qry = qry.filter(id__in=[event.id for event in event_records])
+        formset = EventsFormSet(queryset=page_qry)
+
+    context = {'event_records': event_records, 'formset': formset}
+    messages.debug(request, qry)
+    return render(request, 'events/all_events.html', context)
 
 
 def list_subscribers(request):
@@ -81,24 +117,34 @@ class MyClubDetailView(DetailView):
     context_object_name = 'event'
 
 
-class MyClubCreatEvent(CreateView):
+class MyClubCreateEvent(LoginRequiredMixin, CreateView):
+    login_url = reverse_lazy('login')
     model = Event
-    fields = ['name', 'event_date', 'description']
+    # fields = ['name', 'event_date', 'description']
     success_url = reverse_lazy('show-events')
-
-    def form_valid(self, form):
-        form.save()
-        return HttpResponseRedirect(self.success_url)
+    form_class = EventForm
 
 
-class MyClubUpdateEvent(UpdateView):
+class MyClubUpdateEvent(LoginRequiredMixin, UpdateView):
+    login_url = reverse_lazy('login')
     model = Event
-    fields = ['name', 'event_date', 'description']
+    # fields = ['name', 'event_date', 'description']
     template_name_suffix = '_update_form'
     success_url = reverse_lazy('show-events')
+    form_class = EventForm
 
 
 class MyClubDeleteEvent(DeleteView):
     model = Event
     context_object_name = 'event'
     success_url = reverse_lazy('show-events')
+
+
+class Register(CreateView):
+    template_name = 'registration/register.html'
+    form_class = UserCreationForm
+    success_url = reverse_lazy('register-success')
+
+    def form_valid(self, form):
+        form.save()
+        return HttpResponseRedirect(self.success_url)

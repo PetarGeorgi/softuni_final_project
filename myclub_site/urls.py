@@ -16,8 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
-from django.views.generic.base import RedirectView
-from events.views import Event_view
+from django.views.generic.base import RedirectView, TemplateView
+from events.views import Event_view, Register
 
 from events.admin import admin_site
 from . import contact
@@ -30,10 +30,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('admin/password_reset',
          auth_views.PasswordResetView.as_view(),
-         name='admin_password_reset',),
+         name='admin_password_reset', ),
     path('admin/password_reset/done/',
          auth_views.PasswordResetDoneView.as_view(template_name='registration/password_reset_done.html'),
-         name='password_reset_down',),
+         name='password_reset_down', ),
     path('reset/<uidb64>/<token>/',
          auth_views.PasswordResetConfirmView.as_view(),
          name='password_reset_confirm',
@@ -44,6 +44,8 @@ urlpatterns = [
     path('eventsadmin/', admin_site.urls),
     path('contact/', contact.contact, name='contact'),
     path("", include('events.urls')),
-    path('home', RedirectView.as_view(url ='/', permanent=True)),
-    path('events_view/', Event_view.as_view())
+    path('home', RedirectView.as_view(url='/', permanent=True)),
+    path('register/success/', TemplateView.as_view(template_name="registration/success.html"), name='register-success'),
+    path('register/', Register.as_view(), name='register'),
+    path('', include('django.contrib.auth.urls')),
     ]
