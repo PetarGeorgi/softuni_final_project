@@ -8,14 +8,22 @@
         {% endblock title %}
     </title>
     <link rel="stylesheet" href="{% static 'main.css' %}" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <div id="wrapper">
     <header id="header">
+       <div class="loginlogout">{% if user.is_authenticated %}
+Hello, {{ user.username }}.
+<a href="{% url 'logout' %}?next=/">Log out</a>.
+{% else %}
+Not logged in.
+<a href="{% url 'login' %}?next=/">Log in</a>.
+{% endif %}</div>
         <div id="logo"><img src="{% static 'MyClub1.png' %}" alt=""></div>
         <div id="top_menu">
-            <a href="/home">Home</a> |
-            <a href="/home">Calendar</a> I
+            <a href="/home">Home</a>
+            <a href="/home">Calendar</a>
             <div class="dropdown">
                 <button class="dropbtn">About
                     <i class="fa fa-caret-down"></i>
@@ -26,26 +34,10 @@
                     <a href="#">Link 3</a>
                 </div>
             </div>
-            <!--            <div class="navbar">-->
-            <!--  <a href="#home">Home</a>-->
-            <!--  <a href="#news">News</a>-->
-            <!--  <div class="dropdown">-->
-            <!--    <button class="dropbtn">Dropdown -->
-            <!--      <i class="fa fa-caret-down"></i>-->
-            <!--    </button>-->
-            <!--    <div class="dropdown-content">-->
-            <!--      <a href="#">Link 1</a>-->
-            <!--      <a href="#">Link 2</a>-->
-            <!--      <a href="#">Link 3</a>-->
+            <a href="/contact">Contact Us</a>
         </div>
-<a href="/contact">Contact Us</a>
-{% if user.is_authenticated %}
-Hello, {{ user.username }}.
-<a href="{% url 'logout' %}?next=/">Log out</a>.
-{% else %}
-Not logged in.
-<a href="{% url 'login' %}?next=/">Log in</a>.
-{% endif %}
+
+
 <div id="topbanner"><img src="{% static 'MyClub_banner.jpg' %}" alt=""></div>
 </header>
 {% if user.is_authenticated %}
@@ -64,13 +56,38 @@ Not logged in.
     <p>Placeholder text in base template. Replace with page content.</p>
     {% endblock content %}
 </section>
-<footer id="footer">Copyright &copy;
+
+<footer id="footer">
+   <div class="footerall">
+    <div class="footerc">Copyright &copy;
     <script type="text/JavaScript">
              document.write(newDate().getFullYear());
 
-
     </script>
-    MyClub
+    MyClub</div>
+       <div class="footerd">
+          <div class="social-icons">
+  <a href="https://www.facebook.com/penetpl"  title="facebook">
+    <i class="fa fa-facebook-square" aria-hidden="true"></i>
+  </a>
+  <a href="https://twitter.com/softunibg" title="twitter">
+    <i class="fa fa-twitter-square" aria-hidden="true"></i>
+  </a>
+  <a href="https://www.instagram.com/petar_georgief/" title="instagram">
+    <i class="fa fa-instagram" aria-hidden="true"></i>
+  </a>
+  <a href="https://www.youtube.com/watch?v=7QNt1z25FZA" title="youtube">
+    <i class="fa fa-youtube-square" aria-hidden="true"></i>
+  </a>
+    <a href="tel:+359878927658" title="phone">
+    <i class="fa fa-phone" aria-hidden="true"></i>
+  </a>
+              <a href="mailto:PetarGeorgievpl@students.softuni.bg" title="mail">
+    <i class="fa fa-envelope" aria-hidden="true"></i>
+  </a>
+</div>
+       </div>
+   </div>
 </footer>
 </div>
 </body>

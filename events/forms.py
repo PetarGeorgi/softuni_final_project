@@ -36,7 +36,15 @@ class VenueForm(ModelForm):
             'name': MyFormWidget(attrs={'class': 'mywidget'}),
             'address': Textarea(attrs={'cols': 40, 'rows': 3}),
             }
-
+    """Override this clean() method to provide custom validation. """
+    def clean(self):
+        cleaned_data = super().clean()
+        phone = cleaned_data.get("phone")
+        email_address = cleaned_data.get("email_address")
+        if not (phone or email_address):
+            raise forms.ValidationError(
+             "You must enter either a phone number or an email,both."
+              )
 
 class EventForm(ModelForm):
     description = forms.CharField(widget=CKEditorWidget())

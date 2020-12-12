@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.core.mail import send_mail, get_connection
 
+
 class ContactForm(forms.Form):
     yourname = forms.CharField(max_length=100, label='Your Name')
     email = forms.EmailField(required=False, label='Your Email Address')
