@@ -120,7 +120,6 @@ class MyClubDetailView(DetailView):
 class MyClubCreateEvent(LoginRequiredMixin, CreateView):
     login_url = reverse_lazy('login')
     model = Event
-    # fields = ['name', 'event_date', 'description']
     success_url = reverse_lazy('show-events')
     form_class = EventForm
 
@@ -128,7 +127,6 @@ class MyClubCreateEvent(LoginRequiredMixin, CreateView):
 class MyClubUpdateEvent(LoginRequiredMixin, UpdateView):
     login_url = reverse_lazy('login')
     model = Event
-    # fields = ['name', 'event_date', 'description']
     template_name_suffix = '_update_form'
     success_url = reverse_lazy('show-events')
     form_class = EventForm

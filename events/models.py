@@ -1,7 +1,6 @@
 # Create your models here.
-
-from django.contrib.auth.models import User
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Venue(models.Model):
@@ -16,11 +15,6 @@ class Venue(models.Model):
         return self.name
 
 
-class EventManager(models.Manager):
-    def event_type_count(self, event_type):
-        return self.filter(name__icontains=event_type).count()
-
-
 class MyClubUser(models.Model):
     user = models.OneToOneField(User, blank=True, null=True, on_delete=models.SET_NULL)
     address = models.CharField(blank=True, max_length=100)
@@ -28,7 +22,14 @@ class MyClubUser(models.Model):
     volunteer = models.BooleanField(default=False)
 
     def __str__(self):
-        return ''
+        return ""
+
+
+"""Create an extra manager method for the Event model to retrieve the total number of events for a
+particular event type"""
+class EventManager(models.Manager):
+    def event_type_count(self, event_type):
+        return self.filter(name__icontains=event_type).count()
 
 
 class Event(models.Model):
@@ -43,14 +44,6 @@ class Event(models.Model):
     def save(self, *args, **kwargs):
         self.manager = User.objects.get(username='admin')
         super(Event, self).save(*args, **kwargs)
-
-    def event_timing(self, date):
-        if self.event_date > date:
-            return "Event is after this date"
-        elif self.event_date == date:
-            return "Event is on the same day"
-        else:
-            return "Event is before this date"
 
     def __str__(self):
         return self.name

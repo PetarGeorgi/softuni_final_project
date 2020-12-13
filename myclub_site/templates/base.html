@@ -28,11 +28,13 @@ Not logged in.
                 <button class="dropbtn">About
                     <i class="fa fa-caret-down"></i>
                 </button>
+                {% if user.is_authenticated %}
                 <div class="dropdown-content">
-                    <a href="#">Link 1</a>
-                    <a href="#">Link 2</a>
-                    <a href="#">Link 3</a>
+                    <a href="http://127.0.0.1:8000/events/">List our events</a>
+                    <a href="http://127.0.0.1:8000/contact/">For more questions!</a>
+                    <a href="https://www.bfunion.bg/">BFS web page</a>
                 </div>
+                {% endif %}
             </div>
             <a href="/contact">Contact Us</a>
         </div>
@@ -40,13 +42,13 @@ Not logged in.
 
 <div id="topbanner"><img src="{% static 'MyClub_banner.jpg' %}" alt=""></div>
 </header>
-{% if user.is_authenticated %}
+{% if user.is_superuser %}
 <aside id="rightsidebar">
     <nav id="nav">
         <ul>
             <li><a href="/add_venue">Add Venue</a></li>
             <li><a href="/events">Manage Events</a></li>
-            <li>My Profile</li>
+<!--            <li>My Profile</li>-->
         </ul>
     </nav>
 </aside>

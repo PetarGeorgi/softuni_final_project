@@ -9,5 +9,7 @@
            <li> <a href="/event/{{ event.id }}">{{ event.name }}</a></li>
         {% endfor %}
     </ul>
+    {% if user.is_superuser %}
     <p><a href="/event/add/">Add Event</a></p>
+    {% endif %}
 {% endblock content %}
